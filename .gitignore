@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Build outputs
+dist/
+build/
+
+# Environment files
+.env
+client/.env
+server/.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+
+# Editor directories and files
+.vscode/
+.idea/
+
+# Dependency locks (if unwanted for deployment)
+package-lock.json
+
+# Docker artifacts (optional)
+*.local
+docker-compose.override.yml
+
+# Misc
+*.swp
