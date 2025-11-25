@@ -26,9 +26,7 @@ COPY server/ ./
 # Stage 3: Final image
 FROM node:20-alpine
 WORKDIR /app
-
-# Install serve package for serving static files (optional, we'll use express)
-RUN npm install -g serve
+ENV NODE_ENV=production
 
 # Copy server files
 COPY --from=server-builder /app/server /app/server

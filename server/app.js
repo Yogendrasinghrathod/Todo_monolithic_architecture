@@ -3,12 +3,18 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 import connectDB from './db/database.js';
 import userRouter from "./routes/user.js";
 import todoRouter from "./routes/todo.js";
 
 const app = express();
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(express.json());
@@ -36,6 +42,15 @@ app.use(cors({
 // API Routes
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/todo', todoRouter);
+
+// Serve built client when running inside the monolithic Docker image
+const clientBuildPath = path.resolve(__dirname, "../client/dist");
+if (process.env.NODE_ENV === "production" && fs.existsSync(clientBuildPath)) {
+    app.use(express.static(clientBuildPath));
+    app.get("*", (_req, res) => {
+        res.sendFile(path.join(clientBuildPath, "index.html"));
+    });
+}
 
 // Database connection
 connectDB();

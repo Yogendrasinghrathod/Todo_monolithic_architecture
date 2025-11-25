@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import axios from "axios";
+import { api } from "@/lib/api";
 import React, { useEffect, useState } from "react";
 
 // import { useToast } from "@/components/ui/sonner";
@@ -15,9 +15,7 @@ const Home = () => {
   const [selectedTodo, setSelectedTodo] = useState(null);
   const fetchTodos = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/todo", {
-        withCredentials: true,
-      });
+      const res = await api.get("/api/v1/todo");
       if (res.data.status) {
         setTodos(
           res.data.todos
@@ -33,14 +31,7 @@ const Home = () => {
   }, []);
   const addTodoHandler = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/todo",
-        { title, description },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const res = await api.post("/api/v1/todo", { title, description });
       console.log(res.data);
       if (res.data.status) {
         toast.success(res.data.message);
@@ -81,11 +72,7 @@ const Home = () => {
       description,
     };
     try {
-      const res = await axios.put(
-        `http://localhost:8000/api/v1/todo/${selectedTodo._id}`,
-        payload,
-        { headers: { "Content-Type": "application/json" }, withCredentials: true }
-      );
+      const res = await api.put(`/api/v1/todo/${selectedTodo._id}`, payload);
       toast.success(res.data?.message || "Todo updated");
       await fetchTodos();
       clearSelection();
@@ -99,14 +86,14 @@ const Home = () => {
       return;
     }
     try {
-      const res=await axios.delete(`http://localhost:8000/api/v1/todo/${selectedTodo._id}`,{ headers: { "Content-Type": "application/json" }, withCredentials: true });
+      const res = await api.delete(`/api/v1/todo/${selectedTodo._id}`);
       if(res.data.status){
         toast.success(res.data.message);
         await fetchTodos();
         clearSelection();
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to delete todo");
     }
   }
   const handleSubmit = async () => {

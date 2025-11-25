@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 // import { useToast } from "@/components/ui/sonner";
-import axios from "axios";
+import { api } from "@/lib/api";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -20,10 +20,7 @@ const Login = () => {
   const loginHandler = async() => {
 
     try {
-      const res=await axios.post("http://localhost:8000/api/v1/user/login",user,{headers:{
-          'Content-Type':'application/json'
-        }, withCredentials:true
-      })  
+      const res = await api.post("/api/v1/user/login", user);
       console.log(res);
         
       if(res.data.status){
@@ -32,7 +29,7 @@ const Login = () => {
       }
 
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response?.data?.message || "Login failed");
     }
   };
   return (
