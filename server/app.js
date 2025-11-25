@@ -47,7 +47,8 @@ app.use('/api/v1/todo', todoRouter);
 const clientBuildPath = path.resolve(__dirname, "../client/dist");
 if (process.env.NODE_ENV === "production" && fs.existsSync(clientBuildPath)) {
     app.use(express.static(clientBuildPath));
-    app.get("*", (_req, res) => {
+    // Express v5 requires explicit wildcard format (/*) instead of bare *
+    app.get("/*", (_req, res) => {
         res.sendFile(path.join(clientBuildPath, "index.html"));
     });
 }
